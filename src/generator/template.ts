@@ -25,6 +25,29 @@ export function getEngine(
     autoescape: false,
   })
 
+  const getCoreDnsFilter = (str?: string): string => {
+    // istanbul ignore next
+    if (!str) {
+      return ''
+    }
+
+    const array = str.split('\n')
+
+    return array
+      .map((item) => {
+        const testString: string =
+          !!item && item.trim() !== '' ? item.toUpperCase() : ''
+
+        if (testString.startsWith('#') || testString === '') {
+          return item
+        }
+
+        return `- ${item}`.replace(/\/\/.*$/, '').trim()
+      })
+      .filter((item) => !!item)
+      .join('\n')
+  }
+
   const getClashFilter = (clashCore: ClashCoreType) => {
     const supportedRule = (() => {
       switch (clashCore) {
@@ -75,6 +98,7 @@ export function getEngine(
   }
   engine.addFilter('clashMeta', getClashFilter('clash.meta'))
   engine.addFilter('stash', getClashFilter('stash'))
+  engine.addFilter('coredns', getCoreDnsFilter)
 
   engine.addFilter('quantumultx', (str?: string): string => {
     // istanbul ignore next
