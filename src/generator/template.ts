@@ -64,6 +64,24 @@ export function getEngine(
     return newArray.join('\n')
   }
 
+  const getCoreDnsHostFilter = (str?: string, count?: number): string => {
+    // istanbul ignore next
+    if (!str) {
+      return ''
+    }
+
+    // add '- ' to each line
+    const array = str.trim().split('\n').filter(item => item).map((item) => `- ${item}`)
+    let indentation = ''
+    if (count != undefined) {
+      indentation = ' '.repeat(count)
+    }
+    for (let i = 1; i < array.length; i++) {
+      array[i] = indentation + array[i]
+    }
+    return array.join('\n')
+  }
+
   const getCoreDnsFilterFilter = (str?: string, count?: number): string => {
     // istanbul ignore next
     if (!str) {
@@ -153,6 +171,7 @@ export function getEngine(
   engine.addFilter('stash', getClashFilter('stash'))
   engine.addFilter('coredns_rule', getCoreDnsRuleFilter)
   engine.addFilter('coredns_filter', getCoreDnsFilterFilter)
+  engine.addFilter('coredns_host', getCoreDnsHostFilter)
 
   engine.addFilter('quantumultx', (str?: string): string => {
     // istanbul ignore next
