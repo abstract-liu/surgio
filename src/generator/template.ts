@@ -13,6 +13,8 @@ import {
   STASH_SUPPORTED_RULE,
   LOON_SUPPORTED_RULE,
   SURFBOARD_SUPPORTED_RULE,
+  COREDNS_SUPPORTED_RULE,
+  COREDNS_SUPPORTED_FILTER,
 } from '../constant'
 
 export function getEngine(
@@ -25,7 +27,7 @@ export function getEngine(
     autoescape: false,
   })
 
-  const getCoreDnsFilter = (str?: string): string => {
+  const getCoreDnsRuleFilter = (str?: string, count?: number): string => {
     // istanbul ignore next
     if (!str) {
       return ''
@@ -33,7 +35,7 @@ export function getEngine(
 
     const array = str.split('\n')
 
-    return array
+    const newArray = array
       .map((item) => {
         const testString: string =
           !!item && item.trim() !== '' ? item.toUpperCase() : ''
@@ -42,10 +44,61 @@ export function getEngine(
           return item
         }
 
-        return `- ${item}`.replace(/\/\/.*$/, '').trim()
+        const matched = testString.match(/^([\w-]+),/)
+
+        if (matched && COREDNS_SUPPORTED_RULE.some((s) => matched[1] === s)) {
+          return `- ${item}`.replace(/\/\/.*$/, '').trim()
+        }
+
+        return null
       })
       .filter((item) => !!item)
-      .join('\n')
+
+    let indentation = ''
+    if (count != undefined) {
+      indentation = ' '.repeat(count)
+    }
+    for (let i = 1; i < newArray.length; i++) {
+      newArray[i] = indentation + newArray[i]
+    }
+    return newArray.join('\n')
+  }
+
+  const getCoreDnsFilterFilter = (str?: string, count?: number): string => {
+    // istanbul ignore next
+    if (!str) {
+      return ''
+    }
+
+    const array = str.split('\n')
+
+    const newArray = array
+      .map((item) => {
+        const testString: string =
+          !!item && item.trim() !== '' ? item.toUpperCase() : ''
+
+        if (testString.startsWith('#') || testString === '') {
+          return item
+        }
+
+        const matched = testString.match(/^([\w-]+),/)
+
+        if (matched && COREDNS_SUPPORTED_FILTER.some((s) => matched[1] === s)) {
+          return `- ${item}`.replace(/\/\/.*$/, '').replace(/,no\-resolve/, '').trim()
+        }
+
+        return null
+      })
+      .filter((item) => !!item)
+
+    let indentation = ''
+    if (count != undefined) {
+      indentation = ' '.repeat(count)
+    }
+    for (let i = 1; i < newArray.length; i++) {
+      newArray[i] = indentation + newArray[i]
+    }
+    return newArray.join('\n')
   }
 
   const getClashFilter = (clashCore: ClashCoreType) => {
@@ -98,7 +151,8 @@ export function getEngine(
   }
   engine.addFilter('clashMeta', getClashFilter('clash.meta'))
   engine.addFilter('stash', getClashFilter('stash'))
-  engine.addFilter('coredns', getCoreDnsFilter)
+  engine.addFilter('coredns_rule', getCoreDnsRuleFilter)
+  engine.addFilter('coredns_filter', getCoreDnsFilterFilter)
 
   engine.addFilter('quantumultx', (str?: string): string => {
     // istanbul ignore next

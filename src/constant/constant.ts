@@ -82,6 +82,18 @@ export const STASH_SUPPORTED_RULE = [
   'SCRIPT',
 ] as const
 
+export const COREDNS_SUPPORTED_RULE = [
+  'DOMAIN',
+  'DOMAIN-SUFFIX',
+  'DOMAIN-KEYWORD',
+] as const
+
+export const COREDNS_SUPPORTED_FILTER = [
+  'IP-CIDR',
+  'GEOIP',
+  'GEOSITE',
+] as const
+
 export const QUANTUMULT_X_SUPPORTED_RULE = [
   'USER-AGENT',
   'HOST',
