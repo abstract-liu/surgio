@@ -27,7 +27,7 @@ class GenerateCommand extends BaseCommand<typeof GenerateCommand> {
       setConfig('output', this.flags.output)
     }
 
-    await this.generate(this.flags['skip-fail'], this.flags['cache-snippet'])
+    await this.generate(this.flags['skip-fail'], this.flags['cache-snippet'], this.flags['generate-config'])
 
     await this.cleanup()
   }
@@ -35,11 +35,23 @@ class GenerateCommand extends BaseCommand<typeof GenerateCommand> {
   private async generate(
     skipFail?: boolean,
     cacheSnippet?: boolean,
+    generateConfig?: string,
   ): Promise<void> {
     this.ora.info('开始生成规则')
 
     const config = this.surgioConfig
-    const artifactList: ReadonlyArray<ArtifactConfig> = config.artifacts
+    let artifactList
+    if (generateConfig) {
+      artifactList = config.artifacts.filter(
+        (item: ArtifactConfig) => item.name === generateConfig,
+      )
+
+      if (artifactList.length === 0) {
+        throw new Error(`未找到名为 ${generateConfig} 的配置`)
+      }
+    } else {
+      artifactList = config.artifacts
+    }
     const distPath = config.output
     const remoteSnippetsConfig = config.remoteSnippets || []
     const remoteSnippetList = await loadRemoteSnippetList(
@@ -109,6 +121,10 @@ GenerateCommand.flags = {
   'skip-lint': Flags.boolean({
     default: false,
     description: '跳过代码检查',
+  }),
+  'generate-config': Flags.string({
+    char: 'c',
+    description: '需要生成的配置',
   }),
 }
 
