@@ -33,7 +33,7 @@ export function getEngine(
       return ''
     }
 
-    const array = str.split('\n')
+    const array = str.split('\n').map((item) => item.trim())
 
     const newArray = array
       .map((item) => {
@@ -45,6 +45,7 @@ export function getEngine(
         }
 
         const matched = testString.match(/^([\w-]+),/)
+        console.log(testString, matched)
 
         if (matched && COREDNS_SUPPORTED_RULE.some((s) => matched[1] === s)) {
           return `- ${item}`.replace(/\/\/.*$/, '').trim()

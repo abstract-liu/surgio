@@ -86,6 +86,7 @@ export const COREDNS_SUPPORTED_RULE = [
   'DOMAIN',
   'DOMAIN-SUFFIX',
   'DOMAIN-KEYWORD',
+  'TYPE',
 ] as const
 
 export const COREDNS_SUPPORTED_FILTER = [
