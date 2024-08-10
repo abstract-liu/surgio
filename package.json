@@ -54,8 +54,8 @@
     "release:beta": "bumpp --preid beta --no-push && npm publish --tag beta"
   },
   "oclif": {
-    "bin": "surgio",
-    "dirname": "surgio",
+    "bin": "surgio_private",
+    "dirname": "surgio_private",
     "commands": "./build/commands",
     "plugins": [
       "@oclif/plugin-help",
