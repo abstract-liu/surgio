@@ -144,6 +144,12 @@ export const getSurgeNodeNames = function (
   return result.join(', ')
 }
 
+export const tagGenerateTimestamp = function (): string {
+  // to readable time with timestamp
+  const date = new Date()
+  return 'Generated at ' + date.toLocaleString() + ' ' + date.getTime()
+}
+
 function nodeListMapper(
   nodeConfig: PossibleNodeConfigType,
 ): [string, string] | undefined {

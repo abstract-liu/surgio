@@ -50,6 +50,7 @@ import {
   getNetworkConcurrency,
   getSingboxNodeNames,
   getSingboxNodes,
+  tagGenerateTimestamp,
 } from '../utils'
 import { resolveDomain } from '../utils/dns'
 import { internalFilters, validateFilter } from '../filters'
@@ -142,6 +143,7 @@ export class Artifact extends EventEmitter {
       getSingboxNodeNames,
       getSurgeNodes,
       getSurgeNodeNames,
+      tagGenerateTimestamp,
       getSurgeWireguardNodes,
       getSurfboardNodes,
       getSurfboardNodeNames,
