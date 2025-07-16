@@ -192,8 +192,8 @@ function nodeListMapper(
             'https',
             nodeConfig.hostname,
             nodeConfig.port,
-            nodeConfig.username,
-            nodeConfig.password,
+            nodeConfig.username /* istanbul ignore next */ || '',
+            nodeConfig.password /* istanbul ignore next */ || '',
           ].join(', '),
         ].join(' = '),
       ]
@@ -208,8 +208,8 @@ function nodeListMapper(
             'http',
             nodeConfig.hostname,
             nodeConfig.port,
-            nodeConfig.username,
-            nodeConfig.password,
+            nodeConfig.username /* istanbul ignore next */ || '',
+            nodeConfig.password /* istanbul ignore next */ || '',
           ].join(', '),
         ].join(' = '),
       ]
@@ -517,6 +517,8 @@ function appendCommonConfig(
         'sni',
         'serverCertFingerprintSha256',
         'blockQuic',
+        'portHopping',
+        'portHoppingInterval',
       ],
       {
         keyFormat: 'kebabCase',
